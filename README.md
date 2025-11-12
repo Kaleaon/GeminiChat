@@ -1,13 +1,12 @@
 ## AI Studio Android App
 
-A native Android experience that recreates the promotional landing page for Google AI Studio.
-It mirrors the original web app banner, messaging, and call to action while taking advantage of
-Material 3 design components and Jetpack Compose for a responsive layout.
+A native Android experience that recreates the promotional landing page for Google AI Studio with a
+traditional view-based UI.
 
-- Kotlin, Jetpack Compose, Material 3, Coil image loading
-- Dynamic color support and light/dark themes
-- Deep link button that opens the AI Studio website in the user's browser
-- Instrumented and unit test stubs ready for expansion
+- Kotlin + ViewBinding + Material 3 components
+- Remote banner image loading with Coil
+- Browser deep link CTA with graceful fallback messaging
+- GitHub Actions workflow for unit tests and debug APK assembly
 
 ### Prerequisites
 
@@ -20,7 +19,7 @@ Material 3 design components and Jetpack Compose for a responsive layout.
 1. Clone the repository and open it in Android Studio.
 2. Let Gradle sync complete (internet required the first time for dependency downloads).
 3. Select a physical device or emulator running API 24+.
-4. Click "Run" or execute the command below.
+4. Click **Run** or execute:
 
 ```bash
 ./gradlew :app:installDebug
@@ -30,15 +29,25 @@ Material 3 design components and Jetpack Compose for a responsive layout.
 
 ```bash
 ./gradlew testDebugUnitTest
-./gradlew connectedDebugAndroidTest
 ```
+
+> The `connectedDebugAndroidTest` task requires a locally configured Android SDK / device.
+
+### Continuous Integration
+
+The workflow in `.github/workflows/android-ci.yml` runs on every push and pull request:
+
+- Sets up JDK 17 and caches Gradle artifacts
+- Installs the Android SDK
+- Executes unit tests (`testDebugUnitTest`)
+- Builds the debug APK (`assembleDebug`)
 
 ### Project Structure
 
-- `app/src/main/java/com/example/aistudioapp` Main activity and Compose UI
-- `app/src/main/java/com/example/aistudioapp/ui/theme` Theming utilities
-- `app/src/main/res` Resources such as strings, icons, and theme XML
-- `app/build.gradle.kts` Module configuration using the Android Gradle Plugin
+- `app/src/main/java/com/example/aistudioapp` Activity logic and helpers
+- `app/src/main/res/layout` Layout XML for the landing screen
+- `app/src/main/res/values` Strings, colors, and themes
+- `app/build.gradle.kts` Android application module configuration
 
 ### Next Steps
 
