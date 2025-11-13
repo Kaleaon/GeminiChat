@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI Studio App</string>
+    <string name="title_built_with_ai_studio">Built with AI Studio</string>
+    <string name="subtitle_fastest_path">The fastest path from prompt to production with Gemini.</string>
+    <string name="cta_start_building">Start building</string>
+    <string name="content_description_banner">AI Studio promotional banner</string>
+    <string name="loading_banner_placeholder">Loading banner...</string>
+    <string name="error_no_browser">No application found to open the link.</string>
+</resources>
