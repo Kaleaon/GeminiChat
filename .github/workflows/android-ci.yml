@@ -3,6 +3,8 @@ name: Android CI
 on:
   push:
     branches: ["**"]
+    tags-ignore:
+      - 'v*'
   pull_request:
 
 jobs:
@@ -27,8 +29,27 @@ jobs:
       - name: Grant execute permission for Gradlew
         run: chmod +x gradlew
 
+      - name: Run lint checks
+        run: ./gradlew lintDebug
+        continue-on-error: true
+
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
 
       - name: Assemble debug APK
         run: ./gradlew assembleDebug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 7
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: app/build/test-results/
+          retention-days: 7
