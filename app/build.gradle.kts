@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -82,6 +83,10 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     // AndroidX Core
     implementation("androidx.core:core-ktx:1.13.1")
@@ -97,9 +102,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.6")
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.3")
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
     
     // Coroutines & Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     
     // Material Design
@@ -114,6 +124,7 @@ dependencies {
     
     // Image Loading
     implementation("io.coil-kt:coil:2.5.0")
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0")
     
     // Testing
     testImplementation("junit:junit:4.13.2")

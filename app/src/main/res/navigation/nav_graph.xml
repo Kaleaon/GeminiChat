@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/chatFragment">
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.aistudioapp.ui.chat.ChatFragment"
+        android:label="@string/nav_chat">
+        <action
+            android:id="@+id/action_chat_to_settings"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.aistudioapp.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings" />
+
+</navigation>
