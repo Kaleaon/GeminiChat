@@ -201,12 +201,24 @@
                 safeCall(async () => {
                     const dna = await window.mh.exportDNA();
                     exposeExport(dna);
+                    if (window.GeminiAvatarBridge && window.GeminiAvatarBridge.onAvatarExported) {
+                        window.GeminiAvatarBridge.onAvatarExported("MakeHuman DNA", JSON.stringify(dna), "MAKEHUMAN");
+                    }
                     log("Exported DNA JSON sent back to GeminiChat.");
                 }, "Export failed");
             });
         }
 
         document.addEventListener("DOMContentLoaded", init);
+        window.requestGeminiAvatar = function (label = "MakeHuman Avatar") {
+            if (!window.mh) return;
+            safeCall(async () => {
+                const dna = await window.mh.exportDNA();
+                if (window.GeminiAvatarBridge && window.GeminiAvatarBridge.onAvatarExported) {
+                    window.GeminiAvatarBridge.onAvatarExported(label, JSON.stringify(dna), "MAKEHUMAN");
+                }
+            }, "Avatar export failed");
+        };
         window.applyMakeHumanModifier = function (path, value) {
             if (!window.mh) return;
             safeCall(() => window.mh.setModifier(path, value), "Slider apply failed");

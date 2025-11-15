@@ -6,6 +6,7 @@ import com.example.aistudioapp.data.chat.ConversationCondenser
 import com.example.aistudioapp.data.drive.DriveBackupManager
 import com.example.aistudioapp.data.files.AttachmentReader
 import com.example.aistudioapp.data.local.ChatDatabase
+import com.example.aistudioapp.data.prefs.AvatarPreferencesStore
 import com.example.aistudioapp.data.prefs.SettingsDataStore
 import com.example.aistudioapp.data.remote.AiProviderClient
 import com.example.aistudioapp.data.repository.ChatRepository
@@ -17,6 +18,8 @@ object ServiceLocator {
 
     @Volatile
     private var chatRepository: ChatRepository? = null
+    @Volatile
+    private var avatarStore: AvatarPreferencesStore? = null
 
     fun initialize(context: Context) {
         provideChatRepository(context)
@@ -48,5 +51,13 @@ object ServiceLocator {
             driveBackupManager = DriveBackupManager(appContext),
             condenser = ConversationCondenser()
         )
+    }
+
+    fun provideAvatarStore(context: Context): AvatarPreferencesStore {
+        return avatarStore ?: synchronized(this) {
+            avatarStore ?: AvatarPreferencesStore(context.applicationContext).also {
+                avatarStore = it
+            }
+        }
     }
 }

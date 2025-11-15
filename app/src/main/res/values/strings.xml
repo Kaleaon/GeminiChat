@@ -70,4 +70,6 @@
     <string name="makehuman_tab">MakeHuman</string>
     <string name="characterstudio_docs">Explore CharacterStudio docs</string>
     <string name="designer_slider_title">Live rig sliders</string>
+    <string name="use_as_ai_avatar">Use as AI video avatar</string>
+    <string name="avatar_saved_toast">AI avatar updated</string>
 </resources>

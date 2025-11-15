@@ -47,6 +47,20 @@
           window.dispatchEvent(new CustomEvent('GeminiCharacterStudioSlider', { detail: { name, value } }));
         }
       };
+      window.requestGeminiAvatar = function (label = 'Character Studio Avatar') {
+        const notify = (data) => {
+          if (window.GeminiAvatarBridge && window.GeminiAvatarBridge.onAvatarExported) {
+            window.GeminiAvatarBridge.onAvatarExported(label, JSON.stringify(data), 'CHARACTER_STUDIO');
+          }
+        };
+        if (window.CharacterStudio && typeof window.CharacterStudio.exportAvatar === 'function') {
+          Promise.resolve(window.CharacterStudio.exportAvatar())
+            .then((data) => notify(data))
+            .catch(() => notify({ manifest: window.__GEMINI_CHARACTER_STUDIO__.manifest }));
+        } else {
+          notify({ manifest: window.__GEMINI_CHARACTER_STUDIO__.manifest });
+        }
+      };
     </script>
     <script type="module" crossorigin src="./index-Dsu9vlV4.js"></script>
     <script src="./ktx2/libktx.js"></script>

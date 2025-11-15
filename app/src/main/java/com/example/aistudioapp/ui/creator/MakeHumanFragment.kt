@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -14,14 +15,19 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
-import com.example.aistudioapp.databinding.FragmentMakehumanBinding
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.aistudioapp.data.model.AvatarSelection
+import com.example.aistudioapp.data.model.AvatarType
+import com.example.aistudioapp.databinding.FragmentMakehumanBinding
+import com.example.aistudioapp.di.ServiceLocator
 import com.example.aistudioapp.ui.creator.adapter.DesignerSliderAdapter
 import com.example.aistudioapp.ui.creator.data.DesignerSliderRepository
 import com.example.aistudioapp.ui.creator.model.DesignerSliderSpec
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class MakeHumanFragment : Fragment() {
 
@@ -34,6 +40,8 @@ class MakeHumanFragment : Fragment() {
     private val characterStudioDocs = "https://github.com/M3-org/CharacterStudio"
 
     private val sliderRepository by lazy { DesignerSliderRepository(requireContext().applicationContext) }
+    private val avatarStore by lazy { ServiceLocator.provideAvatarStore(requireContext()) }
+    private val avatarBridge by lazy { AvatarJavascriptBridge() }
     private val sliderAdapter by lazy {
         DesignerSliderAdapter { spec, value ->
             handleSliderValue(spec, value)
@@ -79,6 +87,9 @@ class MakeHumanFragment : Fragment() {
             }
             openExternal(Uri.parse(target))
         }
+        binding.setAvatarButton.setOnClickListener {
+            requestAvatarExport()
+        }
 
         switchMode(DesignerMode.MAKEHUMAN)
     }
@@ -91,6 +102,17 @@ class MakeHumanFragment : Fragment() {
             binding.characterStudioWebView
         }
         targetWebView.evaluateJavascript(script, null)
+    }
+
+    private fun requestAvatarExport() {
+        binding.designerProgress.isVisible = true
+        val requestScript = "window.requestGeminiAvatar && window.requestGeminiAvatar();"
+        val webView = if (currentMode == DesignerMode.MAKEHUMAN) {
+            binding.makeHumanWebView
+        } else {
+            binding.characterStudioWebView
+        }
+        webView.evaluateJavascript(requestScript, null)
     }
 
     private fun configureMakeHumanWebView() {
@@ -147,6 +169,7 @@ class MakeHumanFragment : Fragment() {
                 }
             }
 
+            addJavascriptInterface(avatarBridge, "GeminiAvatarBridge")
             loadUrl(makeHumanAssetUrl)
         }
     }
@@ -206,6 +229,7 @@ class MakeHumanFragment : Fragment() {
                     ).show()
                 }
             }
+            addJavascriptInterface(avatarBridge, "GeminiAvatarBridge")
         }
     }
 
@@ -216,6 +240,8 @@ class MakeHumanFragment : Fragment() {
         binding.designerProgress.isVisible = true
         val sliders = sliderRepository.getSliders(mode)
         sliderAdapter.submitList(sliders)
+        binding.sliderSectionTitle.isVisible = sliders.isNotEmpty()
+        binding.sliderRecycler.isVisible = sliders.isNotEmpty()
         val docsText = if (mode == DesignerMode.MAKEHUMAN) {
             com.example.aistudioapp.R.string.makehuman_docs
         } else {
@@ -262,4 +288,43 @@ class MakeHumanFragment : Fragment() {
         super.onDestroyView()
     }
 
+    private fun DesignerMode.toAvatarType(): AvatarType {
+        return when (this) {
+            DesignerMode.MAKEHUMAN -> AvatarType.MAKEHUMAN
+            DesignerMode.CHARACTER_STUDIO -> AvatarType.CHARACTER_STUDIO
+        }
+    }
+
+    private fun defaultLabel(type: AvatarType): String {
+        return when (type) {
+            AvatarType.MAKEHUMAN -> "MakeHuman Avatar"
+            AvatarType.CHARACTER_STUDIO -> "Character Studio Avatar"
+        }
+    }
+
+    private inner class AvatarJavascriptBridge {
+        @JavascriptInterface
+        fun onAvatarExported(label: String?, payload: String?, type: String?) {
+            val json = payload ?: return
+            val resolvedType = runCatching { AvatarType.valueOf(type ?: currentMode.toAvatarType().name) }
+                .getOrDefault(currentMode.toAvatarType())
+            val name = label?.takeIf { it.isNotBlank() } ?: defaultLabel(resolvedType)
+            val selection = AvatarSelection(
+                type = resolvedType,
+                label = name,
+                payload = json
+            )
+            viewLifecycleOwner.lifecycleScope.launch {
+                avatarStore.update(selection)
+                if (isAdded) {
+                    binding.designerProgress.isVisible = false
+                    Snackbar.make(
+                        binding.root,
+                        getString(com.example.aistudioapp.R.string.avatar_saved_toast),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
 }

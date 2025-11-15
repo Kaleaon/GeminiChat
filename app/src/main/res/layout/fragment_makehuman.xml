@@ -104,6 +104,14 @@
             android:layout_marginTop="16dp"
             android:text="@string/makehuman_docs" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/setAvatarButton"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/use_as_ai_avatar" />
+
         <TextView
             android:id="@+id/sliderSectionTitle"
             android:layout_width="wrap_content"
