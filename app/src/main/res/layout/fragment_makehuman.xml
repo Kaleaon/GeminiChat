@@ -43,6 +43,31 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/designerToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:checkedButton="@id/tabMakeHuman"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tabMakeHuman"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/makehuman_tab" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tabCharacterStudio"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/characterstudio_tab" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -55,8 +80,15 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black" />
 
+            <WebView
+                android:id="@+id/characterStudioWebView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/black"
+                android:visibility="gone" />
+
             <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/makeHumanProgress"
+                android:id="@+id/designerProgress"
                 style="@style/Widget.Material3.CircularProgressIndicator"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

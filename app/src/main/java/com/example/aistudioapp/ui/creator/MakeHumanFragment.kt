@@ -24,8 +24,12 @@ class MakeHumanFragment : Fragment() {
     private var _binding: FragmentMakehumanBinding? = null
     private val binding get() = _binding!!
 
-    private val assetUrl = "file:///android_asset/makehuman/index.html"
-    private val docsUrl = "https://github.com/makehuman-js/makehuman-js"
+    private val makeHumanAssetUrl = "file:///android_asset/makehuman/index.html"
+    private val characterStudioAssetUrl = "file:///android_asset/characterstudio/index.html"
+    private val makeHumanDocs = "https://github.com/makehuman-js/makehuman-js"
+    private val characterStudioDocs = "https://github.com/M3-org/CharacterStudio"
+
+    private var currentMode = DesignerMode.MAKEHUMAN
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +44,31 @@ class MakeHumanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.makeHumanProgress.isVisible = true
+        configureMakeHumanWebView()
+        configureCharacterStudioWebView()
+        binding.designerToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            val targetMode = if (checkedId == binding.tabMakeHuman.id) {
+                DesignerMode.MAKEHUMAN
+            } else {
+                DesignerMode.CHARACTER_STUDIO
+            }
+            switchMode(targetMode)
+        }
+
+        binding.openDocsButton.setOnClickListener {
+            val target = if (currentMode == DesignerMode.MAKEHUMAN) {
+                makeHumanDocs
+            } else {
+                characterStudioDocs
+            }
+            openExternal(Uri.parse(target))
+        }
+
+        switchMode(DesignerMode.MAKEHUMAN)
+    }
+
+    private fun configureMakeHumanWebView() {
         binding.makeHumanWebView.apply {
             setBackgroundColor(Color.BLACK)
             settings.javaScriptEnabled = true
@@ -55,7 +83,8 @@ class MakeHumanFragment : Fragment() {
 
             webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                    binding.makeHumanProgress.isVisible = newProgress in 0..95
+                    binding.designerProgress.isVisible =
+                        currentMode == DesignerMode.MAKEHUMAN && newProgress in 0..95
                 }
             }
 
@@ -74,7 +103,9 @@ class MakeHumanFragment : Fragment() {
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
-                    binding.makeHumanProgress.isVisible = false
+                    if (currentMode == DesignerMode.MAKEHUMAN) {
+                        binding.designerProgress.isVisible = false
+                    }
                 }
 
                 override fun onReceivedError(
@@ -82,7 +113,7 @@ class MakeHumanFragment : Fragment() {
                     request: WebResourceRequest?,
                     error: android.webkit.WebResourceError?
                 ) {
-                    binding.makeHumanProgress.isVisible = false
+                    binding.designerProgress.isVisible = false
                     Snackbar.make(
                         binding.root,
                         error?.description ?: "Unable to load designer",
@@ -91,11 +122,92 @@ class MakeHumanFragment : Fragment() {
                 }
             }
 
-            loadUrl(assetUrl)
+            loadUrl(makeHumanAssetUrl)
         }
+    }
 
-        binding.openDocsButton.setOnClickListener {
-            openExternal(Uri.parse(docsUrl))
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun configureCharacterStudioWebView() {
+        binding.characterStudioWebView.apply {
+            setBackgroundColor(Color.BLACK)
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+            settings.allowFileAccess = true
+            settings.allowContentAccess = true
+            settings.allowFileAccessFromFileURLs = true
+            settings.allowUniversalAccessFromFileURLs = true
+            settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+                WebSettingsCompat.setAlgorithmicDarkeningAllowed(settings, true)
+            }
+
+            webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    binding.designerProgress.isVisible =
+                        currentMode == DesignerMode.CHARACTER_STUDIO && newProgress in 0..95
+                }
+            }
+
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
+                    val target = request?.url ?: return false
+                    return if (target.scheme?.startsWith("http") == true) {
+                        openExternal(target)
+                        true
+                    } else {
+                        false
+                    }
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    if (currentMode == DesignerMode.CHARACTER_STUDIO) {
+                        binding.designerProgress.isVisible = false
+                    }
+                }
+
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: android.webkit.WebResourceError?
+                ) {
+                    binding.designerProgress.isVisible = false
+                    Snackbar.make(
+                        binding.root,
+                        error?.description ?: "Unable to load Character Studio",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun switchMode(mode: DesignerMode) {
+        currentMode = mode
+        binding.makeHumanWebView.isVisible = mode == DesignerMode.MAKEHUMAN
+        binding.characterStudioWebView.isVisible = mode == DesignerMode.CHARACTER_STUDIO
+        binding.designerProgress.isVisible = true
+        val docsText = if (mode == DesignerMode.MAKEHUMAN) {
+            com.example.aistudioapp.R.string.makehuman_docs
+        } else {
+            com.example.aistudioapp.R.string.characterstudio_docs
+        }
+        binding.openDocsButton.setText(docsText)
+
+        if (mode == DesignerMode.MAKEHUMAN) {
+            if (binding.makeHumanWebView.url == null) {
+                binding.makeHumanWebView.loadUrl(makeHumanAssetUrl)
+            } else {
+                binding.designerProgress.isVisible = false
+            }
+        } else {
+            if (binding.characterStudioWebView.url == null) {
+                binding.characterStudioWebView.loadUrl(characterStudioAssetUrl)
+            } else {
+                binding.designerProgress.isVisible = false
+            }
         }
     }
 
@@ -114,7 +226,17 @@ class MakeHumanFragment : Fragment() {
             webChromeClient = null
             destroy()
         }
+        binding.characterStudioWebView.apply {
+            stopLoading()
+            webChromeClient = null
+            destroy()
+        }
         _binding = null
         super.onDestroyView()
+    }
+
+    private enum class DesignerMode {
+        MAKEHUMAN,
+        CHARACTER_STUDIO
     }
 }

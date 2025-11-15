@@ -66,4 +66,7 @@
     <string name="makehuman_title">3D Character Lab</string>
     <string name="makehuman_subtitle">Sculpt playable avatars with makehuman-js. Use Export JSON to push DNA back into GeminiChat prompts.</string>
     <string name="makehuman_docs">Learn more about makehuman-js</string>
+    <string name="characterstudio_tab">Character Studio</string>
+    <string name="makehuman_tab">MakeHuman</string>
+    <string name="characterstudio_docs">Explore CharacterStudio docs</string>
 </resources>
