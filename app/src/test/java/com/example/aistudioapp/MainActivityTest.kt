@@ -4,11 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import org.junit.Assert.*
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 /**
  * Unit tests for MainActivity functionality.
  * These tests verify the core logic without requiring Android framework dependencies.
  */
+@RunWith(RobolectricTestRunner::class)
 class MainActivityTest {
 
     @Test
