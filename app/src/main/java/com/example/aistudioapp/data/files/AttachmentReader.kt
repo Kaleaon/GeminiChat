@@ -6,9 +6,9 @@ import com.example.aistudioapp.data.model.AttachmentMetadata
 import com.example.aistudioapp.data.model.AttachmentType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.apache.pdfbox.android.PDFBoxResourceLoader
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.text.PDFTextStripper
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
+import com.tom_roush.pdfbox.pdmodel.PDDocument
+import com.tom_roush.pdfbox.text.PDFTextStripper
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader

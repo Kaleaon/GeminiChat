@@ -16,4 +16,7 @@
     <color name="chip_background_dark">#1C2738</color>
     <color name="attachment_border">#E6D7B3</color>
     <color name="attachment_border_dark">#2C3548</color>
+    <color name="primary_blue">#1769E0</color>
+    <color name="accent_yellow">#D9A441</color>
+    <color name="neutral_gray">#1F1F1F</color>
 </resources>
