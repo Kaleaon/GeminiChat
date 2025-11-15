@@ -33,7 +33,21 @@
       <strong>New body sets</strong>
       Switch to the <em>Drophunter</em> or <em>Neurohacker</em> manifests for chunkier armor, cybernetic shells, and less anime silhouettes.
     </div>
-    <script>window.__GEMINI_CHARACTER_STUDIO__ = { manifest: './manifest.json' };</script>
+    <script>
+      window.__GEMINI_CHARACTER_STUDIO__ = window.__GEMINI_CHARACTER_STUDIO__ || {};
+      window.__GEMINI_CHARACTER_STUDIO__.manifest = './manifest.json';
+      window.applyCharacterStudioModifier = function (name, value) {
+        if (window.CharacterStudio && typeof window.CharacterStudio.applyModifier === 'function') {
+          try {
+            window.CharacterStudio.applyModifier(name, value);
+          } catch (err) {
+            console.warn('Slider apply failed', err);
+          }
+        } else {
+          window.dispatchEvent(new CustomEvent('GeminiCharacterStudioSlider', { detail: { name, value } }));
+        }
+      };
+    </script>
     <script type="module" crossorigin src="./index-Dsu9vlV4.js"></script>
     <script src="./ktx2/libktx.js"></script>
   </body>

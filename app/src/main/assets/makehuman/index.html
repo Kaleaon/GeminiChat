@@ -159,11 +159,11 @@
                 return;
             }
 
-            mh = new MakeHuman.Core({
+        window.mh = new MakeHuman.Core({
                 canvas,
             });
 
-            mh.init().then(() => {
+        window.mh.init().then(() => {
                 log("Studio ready. Adjust sliders to sculpt your character.");
                 updatePreset();
                 hookControls();
@@ -174,22 +174,22 @@
 
         function updatePreset() {
             const preset = presetSelector.value;
-            safeCall(() => mh.loadPreset(preset), "Preset load failed");
+            safeCall(() => window.mh.loadPreset(preset), "Preset load failed");
         }
 
         function updateExpression() {
             const expression = expressionSelector.value;
-            safeCall(() => mh.setExpression(expression), "Expression failed");
+            safeCall(() => window.mh.setExpression(expression), "Expression failed");
         }
 
         function updateHeight() {
             const value = parseFloat(heightSlider.value);
-            safeCall(() => mh.setModifier("macrodetails/height", value), "Height update failed");
+            safeCall(() => window.mh.setModifier("macrodetails/height", value), "Height update failed");
         }
 
         function updateTone() {
             const value = parseFloat(toneSlider.value);
-            safeCall(() => mh.setModifier("macrodetails/proportions-tone", value), "Body tone update failed");
+            safeCall(() => window.mh.setModifier("macrodetails/proportions-tone", value), "Body tone update failed");
         }
 
         function hookControls() {
@@ -199,7 +199,7 @@
             toneSlider.addEventListener("input", updateTone);
             exportBtn.addEventListener("click", () => {
                 safeCall(async () => {
-                    const dna = await mh.exportDNA();
+                    const dna = await window.mh.exportDNA();
                     exposeExport(dna);
                     log("Exported DNA JSON sent back to GeminiChat.");
                 }, "Export failed");
@@ -207,6 +207,10 @@
         }
 
         document.addEventListener("DOMContentLoaded", init);
+        window.applyMakeHumanModifier = function (path, value) {
+            if (!window.mh) return;
+            safeCall(() => window.mh.setModifier(path, value), "Slider apply failed");
+        };
     </script>
 </body>
 

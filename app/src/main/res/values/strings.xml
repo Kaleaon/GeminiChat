@@ -69,4 +69,5 @@
     <string name="characterstudio_tab">Character Studio</string>
     <string name="makehuman_tab">MakeHuman</string>
     <string name="characterstudio_docs">Explore CharacterStudio docs</string>
+    <string name="designer_slider_title">Live rig sliders</string>
 </resources>

@@ -17,6 +17,10 @@ import androidx.fragment.app.Fragment
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.example.aistudioapp.databinding.FragmentMakehumanBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.aistudioapp.ui.creator.adapter.DesignerSliderAdapter
+import com.example.aistudioapp.ui.creator.data.DesignerSliderRepository
+import com.example.aistudioapp.ui.creator.model.DesignerSliderSpec
 import com.google.android.material.snackbar.Snackbar
 
 class MakeHumanFragment : Fragment() {
@@ -28,6 +32,13 @@ class MakeHumanFragment : Fragment() {
     private val characterStudioAssetUrl = "file:///android_asset/characterstudio/index.html"
     private val makeHumanDocs = "https://github.com/makehuman-js/makehuman-js"
     private val characterStudioDocs = "https://github.com/M3-org/CharacterStudio"
+
+    private val sliderRepository by lazy { DesignerSliderRepository(requireContext().applicationContext) }
+    private val sliderAdapter by lazy {
+        DesignerSliderAdapter { spec, value ->
+            handleSliderValue(spec, value)
+        }
+    }
 
     private var currentMode = DesignerMode.MAKEHUMAN
 
@@ -46,6 +57,10 @@ class MakeHumanFragment : Fragment() {
 
         configureMakeHumanWebView()
         configureCharacterStudioWebView()
+        binding.sliderRecycler.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@MakeHumanFragment.sliderAdapter
+        }
         binding.designerToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             val targetMode = if (checkedId == binding.tabMakeHuman.id) {
@@ -66,6 +81,16 @@ class MakeHumanFragment : Fragment() {
         }
 
         switchMode(DesignerMode.MAKEHUMAN)
+    }
+
+    private fun handleSliderValue(spec: DesignerSliderSpec, value: Float) {
+        val script = spec.targetScript.replace("__VALUE__", value.toString())
+        val targetWebView = if (currentMode == DesignerMode.MAKEHUMAN) {
+            binding.makeHumanWebView
+        } else {
+            binding.characterStudioWebView
+        }
+        targetWebView.evaluateJavascript(script, null)
     }
 
     private fun configureMakeHumanWebView() {
@@ -189,6 +214,8 @@ class MakeHumanFragment : Fragment() {
         binding.makeHumanWebView.isVisible = mode == DesignerMode.MAKEHUMAN
         binding.characterStudioWebView.isVisible = mode == DesignerMode.CHARACTER_STUDIO
         binding.designerProgress.isVisible = true
+        val sliders = sliderRepository.getSliders(mode)
+        sliderAdapter.submitList(sliders)
         val docsText = if (mode == DesignerMode.MAKEHUMAN) {
             com.example.aistudioapp.R.string.makehuman_docs
         } else {
@@ -235,8 +262,4 @@ class MakeHumanFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private enum class DesignerMode {
-        MAKEHUMAN,
-        CHARACTER_STUDIO
-    }
 }
