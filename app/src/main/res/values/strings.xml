@@ -60,4 +60,10 @@
     <string name="provider_meta">Meta</string>
     <string name="provider_grok">Grok</string>
     <string name="provider_ollama">Ollama</string>
+
+    <!-- MakeHuman / Character Designer -->
+    <string name="nav_character_designer">Creator</string>
+    <string name="makehuman_title">3D Character Lab</string>
+    <string name="makehuman_subtitle">Sculpt playable avatars with makehuman-js. Use Export JSON to push DNA back into GeminiChat prompts.</string>
+    <string name="makehuman_docs">Learn more about makehuman-js</string>
 </resources>

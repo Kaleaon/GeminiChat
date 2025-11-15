@@ -8,4 +8,8 @@
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/nav_settings" />
+    <item
+        android:id="@+id/makeHumanFragment"
+        android:icon="@drawable/ic_creator"
+        android:title="@string/nav_character_designer" />
 </menu>
