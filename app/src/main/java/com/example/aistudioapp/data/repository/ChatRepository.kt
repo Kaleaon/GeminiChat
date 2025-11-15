@@ -80,17 +80,33 @@ class ChatRepository(
             }
         }
 
-        val userMessage = ChatMessage(
-            role = ChatRole.USER,
-            content = composedPrompt.trim(),
-            attachments = attachments,
-            createdAt = Instant.now().toEpochMilli(),
-            providerType = providerConfig.providerType
-        )
+        val baseHistory = buildList {
+            appSettings.systemPrompt.takeIf { it.isNotBlank() }?.let { prompt ->
+                add(
+                    ChatMessage(
+                        role = ChatRole.SYSTEM,
+                        content = prompt.trim(),
+                        createdAt = Instant.now().toEpochMilli(),
+                        providerType = providerConfig.providerType
+                    )
+                )
+            }
+            add(
+                ChatMessage(
+                    role = ChatRole.USER,
+                    content = composedPrompt.trim(),
+                    attachments = attachments,
+                    createdAt = Instant.now().toEpochMilli(),
+                    providerType = providerConfig.providerType
+                )
+            )
+        }
+
+        val userMessage = baseHistory.last()
 
         val userMessageId = chatDao.insertMessage(userMessage.toEntity(threadId))
 
-        val history = chatDao.getMessagesForThread(threadId).map { it.toModel() }
+        val history = (chatDao.getMessagesForThread(threadId).map { it.toModel() } + baseHistory)
 
         val assistantMessage = aiProviderClient.sendChat(
             providerConfig = providerConfig,

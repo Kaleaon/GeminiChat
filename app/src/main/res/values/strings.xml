@@ -29,6 +29,7 @@
     <string name="label_api_key">API key</string>
     <string name="label_base_url">Custom base URL</string>
     <string name="label_model">Model name</string>
+    <string name="label_system_prompt">System prompt / persona</string>
     <string name="label_temperature">Temperature</string>
     <string name="label_max_tokens">Max output tokens</string>
     <string name="label_enable_censoring">Enable response censoring</string>

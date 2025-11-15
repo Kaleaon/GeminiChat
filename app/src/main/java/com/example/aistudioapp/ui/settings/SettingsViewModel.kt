@@ -61,6 +61,14 @@ class SettingsViewModel(
     fun updateMaxTokens(value: Int) = updateProviderConfig { it.copy(maxOutputTokens = value) }
     fun toggleCensoring(enabled: Boolean) = updateProviderConfig { it.copy(enableCensoring = enabled) }
 
+    fun updateSystemPrompt(value: String) {
+        viewModelScope.launch {
+            repository.updateSettings { settings ->
+                settings.copy(systemPrompt = value)
+            }
+        }
+    }
+
     fun toggleImages(enabled: Boolean) {
         viewModelScope.launch {
             repository.updateSettings { settings ->

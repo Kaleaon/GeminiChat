@@ -71,9 +71,18 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setupListeners() = with(binding) {
-        apiKeyInput.addTextChangedListener(SimpleTextWatcher { viewModel.updateApiKey(it) })
-        baseUrlInput.addTextChangedListener(SimpleTextWatcher { viewModel.updateBaseUrl(it) })
-        modelInput.addTextChangedListener(SimpleTextWatcher { viewModel.updateModel(it) })
+        apiKeyInput.addTextChangedListener(
+            SimpleTextWatcher { if (apiKeyInput.hasFocus()) viewModel.updateApiKey(it) }
+        )
+        baseUrlInput.addTextChangedListener(
+            SimpleTextWatcher { if (baseUrlInput.hasFocus()) viewModel.updateBaseUrl(it) }
+        )
+        modelInput.addTextChangedListener(
+            SimpleTextWatcher { if (modelInput.hasFocus()) viewModel.updateModel(it) }
+        )
+        systemPromptInput.addTextChangedListener(
+            SimpleTextWatcher { if (systemPromptInput.hasFocus()) viewModel.updateSystemPrompt(it) }
+        )
         temperatureSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) viewModel.updateTemperature(value)
         }
@@ -142,6 +151,7 @@ class SettingsFragment : Fragment() {
                     binding.apiKeyInput.setTextIfDifferent(state.selectedConfig.apiKey)
                     binding.baseUrlInput.setTextIfDifferent(state.selectedConfig.baseUrl.orEmpty())
                     binding.modelInput.setTextIfDifferent(state.selectedConfig.modelName)
+                    binding.systemPromptInput.setTextIfDifferent(state.appSettings.systemPrompt)
                     if (binding.temperatureSlider.value != state.selectedConfig.temperature) {
                         binding.temperatureSlider.value = state.selectedConfig.temperature
                     }
