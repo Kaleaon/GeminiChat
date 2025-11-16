@@ -61,6 +61,13 @@
           notify({ manifest: window.__GEMINI_CHARACTER_STUDIO__.manifest });
         }
       };
+      window.loadExternalModel = function (url) {
+        if (window.CharacterStudio && typeof window.CharacterStudio.loadExternalModel === 'function') {
+          window.CharacterStudio.loadExternalModel(url);
+        } else {
+          window.dispatchEvent(new CustomEvent('GeminiExternalModel', { detail: { url } }));
+        }
+      };
     </script>
     <script type="module" crossorigin src="./index-Dsu9vlV4.js"></script>
     <script src="./ktx2/libktx.js"></script>

@@ -112,6 +112,32 @@
             android:layout_marginTop="12dp"
             android:text="@string/use_as_ai_avatar" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/uploadModelsButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/upload_models_cta" />
+
+        <TextView
+            android:id="@+id/modelsSectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/models_section_title"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textColor="?attr/colorOnSurface"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/modelRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:nestedScrollingEnabled="false"
+            android:paddingTop="8dp" />
+
         <TextView
             android:id="@+id/sliderSectionTitle"
             android:layout_width="wrap_content"

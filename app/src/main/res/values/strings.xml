@@ -72,4 +72,13 @@
     <string name="designer_slider_title">Live rig sliders</string>
     <string name="use_as_ai_avatar">Use as AI video avatar</string>
     <string name="avatar_saved_toast">AI avatar updated</string>
+    <string name="upload_models_cta">Upload 3D models (OBJ, STL, PLY, DAE, BLEND)</string>
+    <string name="models_section_title">Uploaded 3D assets</string>
+    <string name="model_load_button">Load in Character Studio</string>
+    <string name="model_empty_state">No custom models yet</string>
+    <string name="model_upload_failed">Unsupported model type</string>
+    <plurals name="models_uploaded_toast">
+        <item quantity="one">Imported %d model</item>
+        <item quantity="other">Imported %d models</item>
+    </plurals>
 </resources>

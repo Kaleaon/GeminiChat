@@ -10,22 +10,31 @@ import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
+import androidx.webkit.WebViewAssetLoader
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.activity.result.contract.ActivityResultContracts
+import java.io.File
 import com.example.aistudioapp.data.model.AvatarSelection
 import com.example.aistudioapp.data.model.AvatarType
 import com.example.aistudioapp.databinding.FragmentMakehumanBinding
 import com.example.aistudioapp.di.ServiceLocator
 import com.example.aistudioapp.ui.creator.adapter.DesignerSliderAdapter
+import com.example.aistudioapp.ui.creator.adapter.ModelLibraryAdapter
 import com.example.aistudioapp.ui.creator.data.DesignerSliderRepository
+import com.example.aistudioapp.ui.creator.data.ModelLibraryRepository
 import com.example.aistudioapp.ui.creator.model.DesignerSliderSpec
+import com.example.aistudioapp.ui.creator.model.LocalModelEntry
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -39,7 +48,10 @@ class MakeHumanFragment : Fragment() {
     private val makeHumanDocs = "https://github.com/makehuman-js/makehuman-js"
     private val characterStudioDocs = "https://github.com/M3-org/CharacterStudio"
 
+    private lateinit var assetLoader: WebViewAssetLoader
     private val sliderRepository by lazy { DesignerSliderRepository(requireContext().applicationContext) }
+    private val modelRepository by lazy { ModelLibraryRepository(requireContext().applicationContext) }
+    private val modelAdapter by lazy { ModelLibraryAdapter { entry -> loadModelIntoCharacterStudio(entry) } }
     private val avatarStore by lazy { ServiceLocator.provideAvatarStore(requireContext()) }
     private val avatarBridge by lazy { AvatarJavascriptBridge() }
     private val sliderAdapter by lazy {
@@ -47,8 +59,42 @@ class MakeHumanFragment : Fragment() {
             handleSliderValue(spec, value)
         }
     }
+    private val modelPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+            if (uris.isNullOrEmpty()) return@registerForActivityResult
+            viewLifecycleOwner.lifecycleScope.launch {
+                val count = modelRepository.addModels(requireContext().contentResolver, uris)
+                if (count > 0 && isAdded) {
+                    Snackbar.make(
+                        binding.root,
+                        resources.getQuantityString(
+                            com.example.aistudioapp.R.plurals.models_uploaded_toast,
+                            count,
+                            count
+                        ),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                } else if (isAdded) {
+                    Snackbar.make(
+                        binding.root,
+                        com.example.aistudioapp.R.string.model_upload_failed,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
 
     private var currentMode = DesignerMode.MAKEHUMAN
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val modelsDir = File(requireContext().filesDir, "models")
+        modelsDir.mkdirs()
+        assetLoader = WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(requireContext()))
+            .addPathHandler("/models/", WebViewAssetLoader.InternalStoragePathHandler(requireContext(), modelsDir))
+            .build()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,6 +114,10 @@ class MakeHumanFragment : Fragment() {
         binding.sliderRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@MakeHumanFragment.sliderAdapter
+        }
+        binding.modelRecycler.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = modelAdapter
         }
         binding.designerToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
@@ -89,6 +139,22 @@ class MakeHumanFragment : Fragment() {
         }
         binding.setAvatarButton.setOnClickListener {
             requestAvatarExport()
+        }
+        binding.uploadModelsButton.setOnClickListener {
+            modelPickerLauncher.launch(
+                arrayOf(
+                    "model/*",
+                    "application/octet-stream",
+                    "application/x-blender",
+                    "text/plain"
+                )
+            )
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                modelRepository.models.collect { updateModelSection(it) }
+            }
         }
 
         switchMode(DesignerMode.MAKEHUMAN)
@@ -113,6 +179,26 @@ class MakeHumanFragment : Fragment() {
             binding.characterStudioWebView
         }
         webView.evaluateJavascript(requestScript, null)
+    }
+
+    private fun updateModelSection(entries: List<LocalModelEntry>) {
+        modelAdapter.submitList(entries)
+        val hasItems = entries.isNotEmpty()
+        binding.modelsSectionTitle.isVisible = true
+        binding.modelsSectionTitle.text = if (hasItems) {
+            getString(com.example.aistudioapp.R.string.models_section_title)
+        } else {
+            getString(com.example.aistudioapp.R.string.model_empty_state)
+        }
+        binding.modelRecycler.isVisible = hasItems
+    }
+
+    private fun loadModelIntoCharacterStudio(entry: LocalModelEntry) {
+        binding.designerToggle.check(binding.tabCharacterStudio.id)
+        binding.characterStudioWebView.evaluateJavascript(
+            "window.loadExternalModel('${entry.webPath}');",
+            null
+        )
     }
 
     private fun configureMakeHumanWebView() {
@@ -166,6 +252,22 @@ class MakeHumanFragment : Fragment() {
                         error?.description ?: "Unable to load designer",
                         Snackbar.LENGTH_LONG
                     ).show()
+                }
+
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+                    request ?: return null
+                    return assetLoader.shouldInterceptRequest(request.url)
+                }
+
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    url: String?
+                ): WebResourceResponse? {
+                    url ?: return null
+                    return assetLoader.shouldInterceptRequest(Uri.parse(url))
                 }
             }
 
@@ -228,6 +330,22 @@ class MakeHumanFragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
+
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+                    request ?: return null
+                    return assetLoader.shouldInterceptRequest(request.url)
+                }
+
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    url: String?
+                ): WebResourceResponse? {
+                    url ?: return null
+                    return assetLoader.shouldInterceptRequest(Uri.parse(url))
+                }
             }
             addJavascriptInterface(avatarBridge, "GeminiAvatarBridge")
         }
@@ -242,6 +360,12 @@ class MakeHumanFragment : Fragment() {
         sliderAdapter.submitList(sliders)
         binding.sliderSectionTitle.isVisible = sliders.isNotEmpty()
         binding.sliderRecycler.isVisible = sliders.isNotEmpty()
+        if (sliders.isEmpty()) {
+            binding.sliderSectionTitle.text = ""
+        } else {
+            binding.sliderSectionTitle.text =
+                getString(com.example.aistudioapp.R.string.designer_slider_title)
+        }
         val docsText = if (mode == DesignerMode.MAKEHUMAN) {
             com.example.aistudioapp.R.string.makehuman_docs
         } else {
