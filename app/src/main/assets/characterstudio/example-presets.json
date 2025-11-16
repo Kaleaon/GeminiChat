@@ -1,0 +1,430 @@
+{
+  "version": "1.0",
+  "description": "Example character presets for Advanced Character Studio",
+  "presets": [
+    {
+      "name": "Muscular Hero",
+      "description": "A powerful, muscular hero character",
+      "category": "Human",
+      "thumbnail": "https://via.placeholder.com/150/667eea/ffffff?text=Muscular+Hero",
+      "sliders": [
+        {
+          "name": "biceps",
+          "value": 1.8
+        },
+        {
+          "name": "triceps",
+          "value": 1.7
+        },
+        {
+          "name": "chest",
+          "value": 1.6
+        },
+        {
+          "name": "shoulders",
+          "value": 1.7
+        },
+        {
+          "name": "abs",
+          "value": 1.5
+        },
+        {
+          "name": "back",
+          "value": 1.6
+        },
+        {
+          "name": "quadriceps",
+          "value": 1.5
+        },
+        {
+          "name": "calves",
+          "value": 1.4
+        }
+      ]
+    },
+    {
+      "name": "Werewolf",
+      "description": "A fearsome werewolf with animalistic features",
+      "category": "Animal",
+      "thumbnail": "https://via.placeholder.com/150/764ba2/ffffff?text=Werewolf",
+      "sliders": [
+        {
+          "name": "snoutLength",
+          "value": 1.5
+        },
+        {
+          "name": "snoutWidth",
+          "value": 1.3
+        },
+        {
+          "name": "earSize",
+          "value": 1.8
+        },
+        {
+          "name": "earPosition",
+          "value": 0.3
+        },
+        {
+          "name": "jawWidth",
+          "value": 1.4
+        },
+        {
+          "name": "eyeSize",
+          "value": 1.2
+        },
+        {
+          "name": "browRidge",
+          "value": 1.3
+        },
+        {
+          "name": "hairVolume",
+          "value": 1.6
+        },
+        {
+          "name": "hairLength",
+          "value": 1.4
+        },
+        {
+          "name": "facialHairLength",
+          "value": 1.5
+        },
+        {
+          "name": "facialHairDensity",
+          "value": 1.4
+        }
+      ]
+    },
+    {
+      "name": "Slim Athlete",
+      "description": "A lean, athletic character with defined muscles",
+      "category": "Human",
+      "thumbnail": "https://via.placeholder.com/150/58b9ed/ffffff?text=Slim+Athlete",
+      "sliders": [
+        {
+          "name": "biceps",
+          "value": 1.2
+        },
+        {
+          "name": "triceps",
+          "value": 1.1
+        },
+        {
+          "name": "chest",
+          "value": 1.1
+        },
+        {
+          "name": "shoulders",
+          "value": 1.2
+        },
+        {
+          "name": "abs",
+          "value": 1.3
+        },
+        {
+          "name": "quadriceps",
+          "value": 1.2
+        },
+        {
+          "name": "calves",
+          "value": 1.2
+        }
+      ]
+    },
+    {
+      "name": "Dragon Humanoid",
+      "description": "A humanoid with dragon features",
+      "category": "Animal",
+      "thumbnail": "https://via.placeholder.com/150/ffd479/000000?text=Dragon",
+      "sliders": [
+        {
+          "name": "snoutLength",
+          "value": 1.8
+        },
+        {
+          "name": "snoutWidth",
+          "value": 1.2
+        },
+        {
+          "name": "hornLength",
+          "value": 2.0
+        },
+        {
+          "name": "hornCurve",
+          "value": 0.5
+        },
+        {
+          "name": "tailLength",
+          "value": 2.5
+        },
+        {
+          "name": "tailThickness",
+          "value": 1.3
+        },
+        {
+          "name": "wingSpan",
+          "value": 2.0
+        },
+        {
+          "name": "eyeSize",
+          "value": 1.3
+        },
+        {
+          "name": "jawWidth",
+          "value": 1.5
+        }
+      ]
+    },
+    {
+      "name": "Minotaur",
+      "description": "A powerful bull-headed warrior",
+      "category": "Animal",
+      "thumbnail": "https://via.placeholder.com/150/e74c3c/ffffff?text=Minotaur",
+      "sliders": [
+        {
+          "name": "snoutLength",
+          "value": 1.4
+        },
+        {
+          "name": "snoutWidth",
+          "value": 1.6
+        },
+        {
+          "name": "hornLength",
+          "value": 1.8
+        },
+        {
+          "name": "hornCurve",
+          "value": -0.3
+        },
+        {
+          "name": "earSize",
+          "value": 1.5
+        },
+        {
+          "name": "jawWidth",
+          "value": 1.7
+        },
+        {
+          "name": "shoulders",
+          "value": 1.9
+        },
+        {
+          "name": "chest",
+          "value": 1.8
+        },
+        {
+          "name": "biceps",
+          "value": 1.9
+        },
+        {
+          "name": "quadriceps",
+          "value": 1.8
+        },
+        {
+          "name": "tailLength",
+          "value": 1.2
+        }
+      ]
+    },
+    {
+      "name": "Cat Person",
+      "description": "A feline humanoid with cat features",
+      "category": "Animal",
+      "thumbnail": "https://via.placeholder.com/150/9b59b6/ffffff?text=Cat+Person",
+      "sliders": [
+        {
+          "name": "snoutLength",
+          "value": 0.8
+        },
+        {
+          "name": "snoutWidth",
+          "value": 1.1
+        },
+        {
+          "name": "earSize",
+          "value": 1.6
+        },
+        {
+          "name": "earPosition",
+          "value": 0.5
+        },
+        {
+          "name": "eyeSize",
+          "value": 1.4
+        },
+        {
+          "name": "eyeSpacing",
+          "value": 1.1
+        },
+        {
+          "name": "tailLength",
+          "value": 2.0
+        },
+        {
+          "name": "tailThickness",
+          "value": 0.8
+        },
+        {
+          "name": "facialHairLength",
+          "value": 1.3
+        }
+      ]
+    },
+    {
+      "name": "Orc Warrior",
+      "description": "A brutish orc with prominent features",
+      "category": "Fantasy",
+      "thumbnail": "https://via.placeholder.com/150/27ae60/ffffff?text=Orc",
+      "sliders": [
+        {
+          "name": "jawWidth",
+          "value": 1.6
+        },
+        {
+          "name": "browRidge",
+          "value": 1.7
+        },
+        {
+          "name": "chinProminence",
+          "value": 1.4
+        },
+        {
+          "name": "earSize",
+          "value": 1.5
+        },
+        {
+          "name": "shoulders",
+          "value": 1.8
+        },
+        {
+          "name": "chest",
+          "value": 1.7
+        },
+        {
+          "name": "biceps",
+          "value": 1.8
+        },
+        {
+          "name": "back",
+          "value": 1.7
+        }
+      ]
+    },
+    {
+      "name": "Elf Ranger",
+      "description": "A graceful elf with elegant features",
+      "category": "Fantasy",
+      "thumbnail": "https://via.placeholder.com/150/3498db/ffffff?text=Elf",
+      "sliders": [
+        {
+          "name": "earSize",
+          "value": 1.4
+        },
+        {
+          "name": "earPosition",
+          "value": 0.2
+        },
+        {
+          "name": "eyeSize",
+          "value": 1.2
+        },
+        {
+          "name": "cheekbones",
+          "value": 1.3
+        },
+        {
+          "name": "jawWidth",
+          "value": 0.9
+        },
+        {
+          "name": "chinProminence",
+          "value": 0.8
+        },
+        {
+          "name": "hairLength",
+          "value": 2.0
+        },
+        {
+          "name": "hairVolume",
+          "value": 1.2
+        }
+      ]
+    },
+    {
+      "name": "Demon",
+      "description": "A demonic character with horns and tail",
+      "category": "Fantasy",
+      "thumbnail": "https://via.placeholder.com/150/e74c3c/ffffff?text=Demon",
+      "sliders": [
+        {
+          "name": "hornLength",
+          "value": 2.2
+        },
+        {
+          "name": "hornCurve",
+          "value": 0.8
+        },
+        {
+          "name": "tailLength",
+          "value": 2.0
+        },
+        {
+          "name": "tailThickness",
+          "value": 0.9
+        },
+        {
+          "name": "eyeSize",
+          "value": 1.3
+        },
+        {
+          "name": "browRidge",
+          "value": 1.5
+        },
+        {
+          "name": "cheekbones",
+          "value": 1.4
+        },
+        {
+          "name": "jawWidth",
+          "value": 1.3
+        }
+      ]
+    },
+    {
+      "name": "Avian Humanoid",
+      "description": "A bird-like humanoid with wings",
+      "category": "Animal",
+      "thumbnail": "https://via.placeholder.com/150/f39c12/ffffff?text=Avian",
+      "sliders": [
+        {
+          "name": "snoutLength",
+          "value": 1.2
+        },
+        {
+          "name": "snoutWidth",
+          "value": 0.7
+        },
+        {
+          "name": "eyeSize",
+          "value": 1.4
+        },
+        {
+          "name": "eyeSpacing",
+          "value": 1.2
+        },
+        {
+          "name": "wingSpan",
+          "value": 2.5
+        },
+        {
+          "name": "tailLength",
+          "value": 1.5
+        },
+        {
+          "name": "hairVolume",
+          "value": 1.8
+        }
+      ]
+    }
+  ]
+}
