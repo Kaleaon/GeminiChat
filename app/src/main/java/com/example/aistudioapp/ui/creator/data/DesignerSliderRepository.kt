@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.aistudioapp.ui.creator.DesignerMode
 import com.example.aistudioapp.ui.creator.model.DesignerSliderConfig
 import com.example.aistudioapp.ui.creator.model.DesignerSliderSpec
+import com.example.aistudioapp.ui.creator.model.SkeletonType
 import kotlinx.serialization.json.Json
 
 class DesignerSliderRepository(private val context: Context) {
@@ -20,10 +21,15 @@ class DesignerSliderRepository(private val context: Context) {
         }
     }
 
-    fun getSliders(mode: DesignerMode): List<DesignerSliderSpec> {
+    fun getSliders(mode: DesignerMode, skeletonType: SkeletonType): List<DesignerSliderSpec> {
         return when (mode) {
             DesignerMode.MAKEHUMAN -> config.makehuman
-            DesignerMode.CHARACTER_STUDIO -> config.characterStudio
+            DesignerMode.CHARACTER_STUDIO ->
+                if (skeletonType == SkeletonType.SECOND_LIFE) {
+                    config.characterStudioSecondLife
+                } else {
+                    config.characterStudio
+                }
         }
     }
 }

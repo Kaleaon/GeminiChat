@@ -7,7 +7,9 @@ import kotlinx.serialization.Serializable
 data class DesignerSliderConfig(
     val makehuman: List<DesignerSliderSpec> = emptyList(),
     @SerialName("characterStudio")
-    val characterStudio: List<DesignerSliderSpec> = emptyList()
+    val characterStudio: List<DesignerSliderSpec> = emptyList(),
+    @SerialName("characterStudioSecondLife")
+    val characterStudioSecondLife: List<DesignerSliderSpec> = emptyList()
 )
 
 @Serializable

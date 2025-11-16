@@ -38,5 +38,43 @@
       "step": 0.05,
       "targetScript": "window.applyCharacterStudioModifier('cyberScale', __VALUE__);"
     }
+  ],
+  "characterStudioSecondLife": [
+    {
+      "id": "minotaurShoulder",
+      "label": "Shoulder Span",
+      "min": -0.3,
+      "max": 0.6,
+      "defaultValue": 0.2,
+      "step": 0.02,
+      "targetScript": "window.applyCharacterStudioModifier('secondLife.shoulderSpan', __VALUE__);"
+    },
+      {
+        "id": "hoofScale",
+        "label": "Hoof Scale",
+        "min": 0.2,
+        "max": 1.4,
+        "defaultValue": 0.9,
+        "step": 0.02,
+        "targetScript": "window.applyCharacterStudioModifier('secondLife.hoofScale', __VALUE__);"
+      },
+      {
+        "id": "hornCurve",
+        "label": "Horn Curve",
+        "min": -1.0,
+        "max": 1.0,
+        "defaultValue": 0.0,
+        "step": 0.05,
+        "targetScript": "window.applyCharacterStudioModifier('secondLife.hornCurve', __VALUE__);"
+      },
+      {
+        "id": "spineDeform",
+        "label": "Spine Deformation",
+        "min": -0.5,
+        "max": 0.5,
+        "defaultValue": 0.0,
+        "step": 0.02,
+        "targetScript": "window.applyCharacterStudioModifier('secondLife.spineDeform', __VALUE__);"
+      }
   ]
 }

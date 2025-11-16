@@ -68,6 +68,7 @@ class MakeHumanFragment : Fragment() {
         }
 
     private var currentMode = DesignerMode.MAKEHUMAN
+    private var currentSkeleton = SkeletonType.HUMAN
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -224,6 +225,7 @@ class MakeHumanFragment : Fragment() {
 
     private fun loadModelIntoCharacterStudio(entry: LocalModelEntry) {
         binding.designerToggle.check(binding.tabCharacterStudio.id)
+        currentSkeleton = entry.skeletonType
         binding.characterStudioWebView.evaluateJavascript(
             "window.loadExternalModel('${entry.webPath}');",
             null
@@ -233,6 +235,17 @@ class MakeHumanFragment : Fragment() {
                 "window.applySkeletonPreset && window.applySkeletonPreset('SECOND_LIFE');",
                 null
             )
+        }
+        updateSlidersForCurrentState()
+    }
+
+    private fun updateSlidersForCurrentState() {
+        val sliders = sliderRepository.getSliders(currentMode, currentSkeleton)
+        sliderAdapter.submitList(sliders)
+        binding.sliderSectionTitle.isVisible = sliders.isNotEmpty()
+        binding.sliderRecycler.isVisible = sliders.isNotEmpty()
+        binding.sliderSectionTitle.text = if (sliders.isEmpty()) "" else {
+            getString(com.example.aistudioapp.R.string.designer_slider_title)
         }
     }
 
@@ -391,16 +404,7 @@ class MakeHumanFragment : Fragment() {
         binding.makeHumanWebView.isVisible = mode == DesignerMode.MAKEHUMAN
         binding.characterStudioWebView.isVisible = mode == DesignerMode.CHARACTER_STUDIO
         binding.designerProgress.isVisible = true
-        val sliders = sliderRepository.getSliders(mode)
-        sliderAdapter.submitList(sliders)
-        binding.sliderSectionTitle.isVisible = sliders.isNotEmpty()
-        binding.sliderRecycler.isVisible = sliders.isNotEmpty()
-        if (sliders.isEmpty()) {
-            binding.sliderSectionTitle.text = ""
-        } else {
-            binding.sliderSectionTitle.text =
-                getString(com.example.aistudioapp.R.string.designer_slider_title)
-        }
+        updateSlidersForCurrentState()
         val docsText = if (mode == DesignerMode.MAKEHUMAN) {
             com.example.aistudioapp.R.string.makehuman_docs
         } else {
