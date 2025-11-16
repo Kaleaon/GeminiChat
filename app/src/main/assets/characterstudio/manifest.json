@@ -1,0 +1,96 @@
+{
+  "characters": [
+    {
+      "name": "Anata",
+      "description": "Female Stylized",
+      "portrait": "https://m3-org.github.io/CharacterStudio/assets/portraitImages/female.jpg",
+      "manifest": "https://m3-org.github.io/loot-assets/anata/female/manifest.json",
+      "format": "vrm"
+    },
+    {
+      "name": "Anata",
+      "description": "Male Stylized",
+      "portrait": "https://m3-org.github.io/CharacterStudio/assets/portraitImages/male.jpg",
+      "manifest": "https://m3-org.github.io/loot-assets/anata/male/manifest.json",
+      "format": "vrm"
+    },
+    {
+      "name": "ON1FORCE",
+      "description": "Demon",
+      "portrait": "https://m3-org.github.io/CharacterStudio/assets/portraitImages/0n1.jpg",
+      "manifest": "https://m3-org.github.io/loot-assets/0N1/manifest.json",
+      "format": "vrm"
+    },
+    {
+      "name": "Tubby Cat",
+      "description": "Cute",
+      "portrait": "https://m3-org.github.io/CharacterStudio/assets/portraitImages/tubby.jpg",
+      "manifest": "https://m3-org.github.io/loot-assets/tubbycats/manifest.json",
+      "format": "vrm"
+    },
+    {
+      "name": "Drophunter",
+      "description": "Exo-suit Ranger",
+      "portrait": "https://raw.githubusercontent.com/memelotsqui/character-assets/main/assets/portraitImages/DropHunter.png",
+      "manifest": "https://raw.githubusercontent.com/memelotsqui/character-assets/main/character-assets/drophunter/manifest.json",
+      "format": "vrm"
+    },
+    {
+      "name": "Neurohacker",
+      "description": "Hard-surface Cyborg",
+      "portrait": "https://raw.githubusercontent.com/memelotsqui/character-assets/main/assets/portraitImages/NeuralHacker.png",
+      "manifest": "https://raw.githubusercontent.com/memelotsqui/character-assets/main/character-assets/neurohacker/manifest.json",
+      "format": "vrm"
+    }
+  ],
+  "loras": [
+    {
+      "name": "SDXL Lora 728",
+      "description": "Camera framing helper",
+      "manifest": "https://m3-org.github.io/CharacterStudio/lora-assets/manifest.json",
+      "icon": "|"
+    }
+  ],
+  "sprites": [
+    {
+      "name": "Sprite Sheets",
+      "description": "Multiple animation atlases",
+      "manifest": "https://m3-org.github.io/CharacterStudio/sprite-atlas-assets/manifest.json",
+      "icon": "|"
+    }
+  ],
+  "thumbnails": [
+    {
+      "name": "Clothing Thumbnail",
+      "description": "Create thumbnails for outfits",
+      "manifest": "https://m3-org.github.io/CharacterStudio/thumbnail-assets/manifest.json",
+      "icon": "|"
+    }
+  ],
+  "defaultAnimations": [
+    {
+      "name": "T-Pose",
+      "description": "T-Pose",
+      "location": "https://m3-org.github.io/CharacterStudio/animations/1_T-Pose.fbx",
+      "icon": "|"
+    },
+    {
+      "name": "Dancing",
+      "description": "Basic Dance Animation",
+      "location": "https://m3-org.github.io/CharacterStudio/animations/2_Dancing.fbx",
+      "icon": "|"
+    },
+    {
+      "name": "Walking",
+      "description": "Basic Walk Animation",
+      "location": "https://m3-org.github.io/CharacterStudio/animations/3_Walking.fbx",
+      "icon": "|"
+    },
+    {
+      "name": "Waving",
+      "description": "Basic Waving Animation",
+      "location": "https://m3-org.github.io/CharacterStudio/animations/4_Waving.fbx",
+      "icon": "|"
+    }
+  ]
+}

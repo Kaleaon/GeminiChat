@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.AiStudioApp" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.AiStudioApp" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:forceDarkAllowed">true</item>
+        <item name="android:colorBackground">@color/navy_surface_dark</item>
+        <item name="colorPrimary">@color/metallic_gold</item>
+        <item name="colorOnPrimary">@android:color/black</item>
+        <item name="colorSecondary">@color/metallic_silver</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="colorSurface">@color/navy_surface_dark</item>
+        <item name="colorSurfaceVariant">@color/navy_secondary_dark</item>
+        <item name="colorOutline">@color/metallic_silver_deep</item>
+        <item name="marbleBackground">@drawable/bg_marble_dark</item>
+        <item name="marbleTexture">@drawable/bg_marble_dark</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Metallic</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Metallic</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Metallic</item>
         <item name="postSplashScreenTheme">@style/Theme.AiStudioApp</item>
     </style>
 </resources>

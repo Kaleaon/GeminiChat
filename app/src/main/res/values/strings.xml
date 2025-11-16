@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AI Studio App</string>
-    <string name="title_built_with_ai_studio">Built with AI Studio</string>
-    <string name="subtitle_fastest_path">The fastest path from prompt to production with Gemini.</string>
-    <string name="cta_start_building">Start building</string>
-    <string name="content_description_banner">AI Studio promotional banner</string>
-    <string name="loading_banner_placeholder">Loading banner...</string>
-    <string name="error_no_browser">No application found to open the link. Please install a web browser.</string>
-    <string name="error_generic">An error occurred. Please try again.</string>
+    <string name="app_name">Gemini Chat</string>
+
+    <!-- Navigation -->
+    <string name="nav_chat">Chat</string>
+    <string name="nav_settings">Settings</string>
+    <string name="action_new_chat">New chat</string>
+    <string name="toast_new_chat_ready">Fresh canvas ready</string>
+
+    <!-- Chat -->
+    <string name="action_condense">Condense</string>
+    <string name="action_send">Send</string>
+    <string name="action_add_image">Attach image</string>
+    <string name="action_add_document">Attach document</string>
+    <string name="hint_prompt">Ask or instruct…</string>
+    <string name="content_description_provider_badge">Active provider badge</string>
+    <string name="default_thread_title">Start something brilliant</string>
+    <string name="subtitle_active_provider">Powered by %1$s</string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_ai">AI providers &amp; tuning</string>
+    <string name="settings_section_safety">Filtering &amp; safety</string>
+    <string name="settings_section_backup">Local + Google Drive backup</string>
+    <string name="settings_section_condense">Conversation condense</string>
+
+    <!-- Settings Labels -->
+    <string name="label_provider">Provider</string>
+    <string name="label_api_key">API key</string>
+    <string name="label_base_url">Custom base URL</string>
+    <string name="label_model">Model name</string>
+    <string name="label_system_prompt">System prompt / persona</string>
+    <string name="label_temperature">Temperature</string>
+    <string name="label_max_tokens">Max output tokens</string>
+    <string name="label_enable_censoring">Enable response censoring</string>
+    <string name="label_allow_images">Images</string>
+    <string name="label_allow_documents">Documents</string>
+    <string name="label_block_hate">Block hate</string>
+    <string name="label_block_violence">Block violence</string>
+    <string name="label_block_self_harm">Block self‑harm</string>
+    <string name="label_block_sexual">Block explicit</string>
+    <string name="label_custom_terms">Custom banned terms (comma separated)</string>
+    <string name="label_auto_condense">Auto condense threads</string>
+    <string name="label_condense_threshold">When messages exceed</string>
+    <string name="label_backup_never">No backups yet</string>
+    <string name="label_backup_last_run">Last backup %1$s</string>
+
+    <!-- Actions -->
+    <string name="action_select_drive_folder">Choose Drive folder</string>
+    <string name="action_backup_now">Backup latest chat</string>
+    <string name="action_cache_offline">Cache offline copy</string>
+
+    <!-- Errors -->
+    <string name="error_no_drive_folder">Select a Google Drive folder first</string>
+    <string name="error_generic">Something went wrong. Try again.</string>
+
+    <!-- Providers -->
+    <string name="provider_gemini">Gemini</string>
+    <string name="provider_claude">Claude</string>
+    <string name="provider_meta">Meta</string>
+    <string name="provider_grok">Grok</string>
+    <string name="provider_ollama">Ollama</string>
+
+    <!-- MakeHuman / Character Designer -->
+    <string name="nav_character_designer">Creator</string>
+    <string name="makehuman_title">3D Character Lab</string>
+    <string name="makehuman_subtitle">Sculpt playable avatars with makehuman-js. Use Export JSON to push DNA back into GeminiChat prompts.</string>
+    <string name="makehuman_docs">Learn more about makehuman-js</string>
+    <string name="characterstudio_tab">Character Studio</string>
+    <string name="makehuman_tab">MakeHuman</string>
+    <string name="characterstudio_docs">Explore CharacterStudio docs</string>
+    <string name="designer_slider_title">Live rig sliders</string>
+    <string name="use_as_ai_avatar">Use as AI video avatar</string>
+    <string name="avatar_saved_toast">AI avatar updated</string>
+    <string name="upload_models_cta">Upload 3D models (OBJ, STL, PLY, DAE, BLEND)</string>
+    <string name="models_section_title">Uploaded 3D assets</string>
+    <string name="model_load_button">Load in Character Studio</string>
+    <string name="model_empty_state">No custom models yet</string>
+    <string name="model_upload_failed">Unsupported model type</string>
+    <string name="skeleton_picker_title">Select skeleton rig</string>
+    <string name="skeleton_human">Standard humanoid</string>
+    <string name="skeleton_second_life">Second Life / non-human</string>
+    <string name="action_import_models">Import</string>
+    <plurals name="models_uploaded_toast">
+        <item quantity="one">Imported %d model</item>
+        <item quantity="other">Imported %d models</item>
+    </plurals>
 </resources>
