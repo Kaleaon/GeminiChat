@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GeminiChat Character Lab</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0b111c;
+            color: #f4f4f4;
+            font-family: "Inter", "Roboto", system-ui, sans-serif;
+            height: 100%;
+        }
+
+        #root {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        header {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        canvas {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .toolbar button,
+        .toolbar select,
+        .toolbar input {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #f4f4f4;
+            padding: 8px 14px;
+            font-size: 14px;
+        }
+
+        footer {
+            font-size: 12px;
+            opacity: 0.6;
+            padding: 8px 16px;
+            text-align: center;
+        }
+
+        .log {
+            font-family: "JetBrains Mono", "Roboto Mono", monospace;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 6px 10px;
+            margin-top: 8px;
+            border-radius: 6px;
+            max-height: 90px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <header>
+            <h2 style="margin: 0;">GeminiChat Character Designer</h2>
+            <small>Powered by <a href="https://github.com/makehuman-js/makehuman-js" target="_blank"
+                    rel="noopener noreferrer" style="color:#8ab4ff;">makehuman-js</a></small>
+            <div class="log" id="statusLog">Loading 3D workspace…</div>
+        </header>
+        <div class="toolbar">
+            <label>
+                Preset
+                <select id="presetSelector">
+                    <option value="female">Female Base</option>
+                    <option value="male">Male Base</option>
+                </select>
+            </label>
+            <label>
+                Expression
+                <select id="expressionSelector">
+                    <option value="neutral">Neutral</option>
+                    <option value="smile">Smile</option>
+                    <option value="anger">Anger</option>
+                </select>
+            </label>
+            <label>
+                Height
+                <input id="heightSlider" type="range" min="-0.5" max="0.5" step="0.05" value="0" />
+            </label>
+            <label>
+                Body Tone
+                <input id="toneSlider" type="range" min="-0.5" max="0.5" step="0.05" value="0" />
+            </label>
+            <button id="exportBtn">Export JSON</button>
+        </div>
+        <canvas id="viewport"></canvas>
+        <footer>
+            Use pinch/drag gestures to orbit the camera. Tap the export button to send the current DNA JSON
+            back to GeminiChat.
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/makehuman-js@0.0.5/dist/makehuman.js"></script>
+    <script>
+        const statusLog = document.getElementById("statusLog");
+        const presetSelector = document.getElementById("presetSelector");
+        const expressionSelector = document.getElementById("expressionSelector");
+        const heightSlider = document.getElementById("heightSlider");
+        const toneSlider = document.getElementById("toneSlider");
+        const exportBtn = document.getElementById("exportBtn");
+        const canvas = document.getElementById("viewport");
+
+        function log(message) {
+            statusLog.textContent = message;
+        }
+
+        let mh;
+
+        function safeCall(fn, fallbackLabel) {
+            try {
+                fn();
+            } catch (err) {
+                console.warn(fallbackLabel, err);
+                log(`${fallbackLabel}: ${err?.message ?? err}`);
+            }
+        }
+
+        function exposeExport(json) {
+            if (window.CharacterBridge && window.CharacterBridge.onCharacterExported) {
+                window.CharacterBridge.onCharacterExported(JSON.stringify(json));
+            } else if (window.Android && window.Android.onCharacterExported) {
+                window.Android.onCharacterExported(JSON.stringify(json));
+            } else {
+                log("Export ready. Copy JSON from console.");
+                console.info("Character export", json);
+            }
+        }
+
+        function init() {
+            if (!window.MakeHuman) {
+                log("makehuman-js not available. Check network connectivity.");
+                return;
+            }
+
+        window.mh = new MakeHuman.Core({
+                canvas,
+            });
+
+        window.mh.init().then(() => {
+                log("Studio ready. Adjust sliders to sculpt your character.");
+                updatePreset();
+                hookControls();
+            }).catch((err) => {
+                log(`Unable to initialize makehuman-js: ${err?.message ?? err}`);
+            });
+        }
+
+        function updatePreset() {
+            const preset = presetSelector.value;
+            safeCall(() => window.mh.loadPreset(preset), "Preset load failed");
+        }
+
+        function updateExpression() {
+            const expression = expressionSelector.value;
+            safeCall(() => window.mh.setExpression(expression), "Expression failed");
+        }
+
+        function updateHeight() {
+            const value = parseFloat(heightSlider.value);
+            safeCall(() => window.mh.setModifier("macrodetails/height", value), "Height update failed");
+        }
+
+        function updateTone() {
+            const value = parseFloat(toneSlider.value);
+            safeCall(() => window.mh.setModifier("macrodetails/proportions-tone", value), "Body tone update failed");
+        }
+
+        function hookControls() {
+            presetSelector.addEventListener("change", updatePreset);
+            expressionSelector.addEventListener("change", updateExpression);
+            heightSlider.addEventListener("input", updateHeight);
+            toneSlider.addEventListener("input", updateTone);
+            exportBtn.addEventListener("click", () => {
+                safeCall(async () => {
+                    const dna = await window.mh.exportDNA();
+                    exposeExport(dna);
+                    if (window.GeminiAvatarBridge && window.GeminiAvatarBridge.onAvatarExported) {
+                        window.GeminiAvatarBridge.onAvatarExported("MakeHuman DNA", JSON.stringify(dna), "MAKEHUMAN");
+                    }
+                    log("Exported DNA JSON sent back to GeminiChat.");
+                }, "Export failed");
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
+        window.requestGeminiAvatar = function (label = "MakeHuman Avatar") {
+            if (!window.mh) return;
+            safeCall(async () => {
+                const dna = await window.mh.exportDNA();
+                if (window.GeminiAvatarBridge && window.GeminiAvatarBridge.onAvatarExported) {
+                    window.GeminiAvatarBridge.onAvatarExported(label, JSON.stringify(dna), "MAKEHUMAN");
+                }
+            }, "Avatar export failed");
+        };
+        window.applyMakeHumanModifier = function (path, value) {
+            if (!window.mh) return;
+            safeCall(() => window.mh.setModifier(path, value), "Slider apply failed");
+        };
+    </script>
+</body>
+
+</html>

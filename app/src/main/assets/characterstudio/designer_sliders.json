@@ -1,0 +1,42 @@
+{
+  "makehuman": [
+    {
+      "id": "height",
+      "label": "Height",
+      "min": -0.5,
+      "max": 0.5,
+      "defaultValue": 0.0,
+      "step": 0.05,
+      "targetScript": "window.applyMakeHumanModifier('macrodetails/height', __VALUE__);"
+    },
+    {
+      "id": "bodyTone",
+      "label": "Body Tone",
+      "min": -0.5,
+      "max": 0.5,
+      "defaultValue": 0.0,
+      "step": 0.05,
+      "targetScript": "window.applyMakeHumanModifier('macrodetails/proportions-tone', __VALUE__);"
+    }
+  ],
+  "characterStudio": [
+    {
+      "id": "armorWidth",
+      "label": "Armor Width",
+      "min": 0.0,
+      "max": 1.0,
+      "defaultValue": 0.4,
+      "step": 0.05,
+      "targetScript": "window.applyCharacterStudioModifier('armorWidth', __VALUE__);"
+    },
+    {
+      "id": "cyberScale",
+      "label": "Cyborg Scale",
+      "min": 0.0,
+      "max": 1.0,
+      "defaultValue": 0.5,
+      "step": 0.05,
+      "targetScript": "window.applyCharacterStudioModifier('cyberScale', __VALUE__);"
+    }
+  ]
+}

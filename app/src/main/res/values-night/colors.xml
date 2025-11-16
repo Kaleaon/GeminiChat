@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="metallic_silver">#A2A9B6</color>
+    <color name="metallic_silver_deep">#6F7785</color>
+    <color name="metallic_gold">#E3B45D</color>
+    <color name="soft_ivory">#141922</color>
+    <color name="marble_surface_light">#111827</color>
+    <color name="marble_vein_light">#1F2A3F</color>
+    <color name="deep_navy">#020812</color>
+    <color name="navy_surface_dark">#050D1F</color>
+    <color name="navy_secondary_dark">#0C1629</color>
+    <color name="chat_user_bubble">#1B283D</color>
+    <color name="chat_assistant_bubble">#0A1222</color>
+    <color name="chat_system_bubble">#142134</color>
+    <color name="chip_background">#1E2A3B</color>
+    <color name="chip_background_dark">#131C2A</color>
+    <color name="attachment_border">#363F4F</color>
+    <color name="attachment_border_dark">#3E4C65</color>
+    <color name="primary_blue">#5C8DFF</color>
+    <color name="accent_yellow">#E3B45D</color>
+    <color name="neutral_gray">#E6E9EE</color>
+</resources>
