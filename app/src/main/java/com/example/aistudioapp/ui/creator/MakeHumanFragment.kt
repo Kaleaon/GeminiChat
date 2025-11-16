@@ -24,6 +24,7 @@ import androidx.webkit.WebViewFeature
 import androidx.webkit.WebViewAssetLoader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import com.example.aistudioapp.data.model.AvatarSelection
 import com.example.aistudioapp.data.model.AvatarType
@@ -35,6 +36,7 @@ import com.example.aistudioapp.ui.creator.data.DesignerSliderRepository
 import com.example.aistudioapp.ui.creator.data.ModelLibraryRepository
 import com.example.aistudioapp.ui.creator.model.DesignerSliderSpec
 import com.example.aistudioapp.ui.creator.model.LocalModelEntry
+import com.example.aistudioapp.ui.creator.model.SkeletonType
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 

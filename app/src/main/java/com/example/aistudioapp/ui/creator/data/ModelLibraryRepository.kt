@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.documentfile.provider.DocumentFile
 import com.example.aistudioapp.ui.creator.model.LocalModelEntry
+import com.example.aistudioapp.ui.creator.model.SkeletonType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 
@@ -20,6 +23,7 @@ class ModelLibraryRepository(private val context: Context) {
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val modelsDir: File = File(context.filesDir, "models").apply { mkdirs() }
+    private val client = OkHttpClient()
     private val _models = MutableStateFlow<List<LocalModelEntry>>(emptyList())
     val models: StateFlow<List<LocalModelEntry>> = _models
 
@@ -31,7 +35,7 @@ class ModelLibraryRepository(private val context: Context) {
         scope.launch { refresh() }
     }
 
-    suspend fun addModels(resolver: ContentResolver, uris: List<Uri>): Int {
+    suspend fun addModels(resolver: ContentResolver, uris: List<Uri>, skeletonType: SkeletonType = SkeletonType.HUMAN): Int {
         var imported = 0
         withContext(Dispatchers.IO) {
             uris.forEach { uri ->
@@ -47,6 +51,7 @@ class ModelLibraryRepository(private val context: Context) {
                                 input.copyTo(output)
                             }
                         }
+                        writeMetaFor(destFile, skeletonType)
                         imported++
                     }
                 }
@@ -54,6 +59,29 @@ class ModelLibraryRepository(private val context: Context) {
         }
         refresh()
         return imported
+    }
+
+    suspend fun downloadSecondLifePack(label: String, url: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val request = Request.Builder().url(url).build()
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) return@runCatching false
+                    val extension = url.substringAfterLast('.', "").lowercase().ifBlank { "dae" }
+                    val safeName = "${System.currentTimeMillis()}_${label.replace("\\s+".toRegex(), "_")}.$extension"
+                    val destFile = File(modelsDir, safeName)
+                    response.body?.byteStream()?.use { input ->
+                        FileOutputStream(destFile).use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    writeMetaFor(destFile, SkeletonType.SECOND_LIFE)
+                    true
+                }
+            }.getOrDefault(false).also {
+                if (it) refresh()
+            }
+        }
     }
 
     private suspend fun refresh() {
@@ -65,7 +93,8 @@ class ModelLibraryRepository(private val context: Context) {
                         displayName = file.nameWithoutExtension,
                         fileName = file.name,
                         extension = extension,
-                        webPath = "https://appassets.androidplatform.net/models/${file.name}"
+                        webPath = "https://appassets.androidplatform.net/models/${file.name}",
+                        skeletonType = readMetaFor(file)
                     )
                 } else null
             }?.sortedByDescending { it.fileName } ?: emptyList()
@@ -81,5 +110,17 @@ class ModelLibraryRepository(private val context: Context) {
             }
         }
         return null
+    }
+
+    private fun writeMetaFor(file: File, skeletonType: SkeletonType) {
+        val meta = File(file.parentFile, "${file.name}.meta")
+        meta.writeText(skeletonType.name)
+    }
+
+    private fun readMetaFor(file: File): SkeletonType {
+        val meta = File(file.parentFile, "${file.name}.meta")
+        if (!meta.exists()) return SkeletonType.HUMAN
+        return runCatching { SkeletonType.valueOf(meta.readText().trim()) }
+            .getOrDefault(SkeletonType.HUMAN)
     }
 }

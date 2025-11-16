@@ -39,7 +39,7 @@ class ModelLibraryAdapter(
 
         fun bind(entry: LocalModelEntry) {
             binding.modelName.text = entry.displayName
-            binding.modelFormat.text = entry.extension.uppercase()
+            binding.modelFormat.text = "${entry.extension.uppercase()} · ${entry.skeletonType.name.replace('_', ' ')}"
             binding.loadButton.setOnClickListener {
                 onLoadClicked(entry)
             }
