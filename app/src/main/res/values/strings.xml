@@ -77,6 +77,10 @@
     <string name="model_load_button">Load in Character Studio</string>
     <string name="model_empty_state">No custom models yet</string>
     <string name="model_upload_failed">Unsupported model type</string>
+    <string name="skeleton_picker_title">Select skeleton rig</string>
+    <string name="skeleton_human">Standard humanoid</string>
+    <string name="skeleton_second_life">Second Life / non-human</string>
+    <string name="action_import_models">Import</string>
     <plurals name="models_uploaded_toast">
         <item quantity="one">Imported %d model</item>
         <item quantity="other">Imported %d models</item>

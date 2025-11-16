@@ -68,6 +68,13 @@
           window.dispatchEvent(new CustomEvent('GeminiExternalModel', { detail: { url } }));
         }
       };
+      window.applySkeletonPreset = function (preset) {
+        if (window.CharacterStudio && typeof window.CharacterStudio.applySkeletonPreset === 'function') {
+          window.CharacterStudio.applySkeletonPreset(preset);
+        } else {
+          window.dispatchEvent(new CustomEvent('GeminiSkeletonPreset', { detail: { preset } }));
+        }
+      };
     </script>
     <script type="module" crossorigin src="./index-Dsu9vlV4.js"></script>
     <script src="./ktx2/libktx.js"></script>

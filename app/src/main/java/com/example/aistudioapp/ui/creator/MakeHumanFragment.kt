@@ -64,26 +64,7 @@ class MakeHumanFragment : Fragment() {
     private val modelPickerLauncher =
         registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
             if (uris.isNullOrEmpty()) return@registerForActivityResult
-            viewLifecycleOwner.lifecycleScope.launch {
-                val count = modelRepository.addModels(requireContext().contentResolver, uris)
-                if (count > 0 && isAdded) {
-                    Snackbar.make(
-                        binding.root,
-                        resources.getQuantityString(
-                            com.example.aistudioapp.R.plurals.models_uploaded_toast,
-                            count,
-                            count
-                        ),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                } else if (isAdded) {
-                    Snackbar.make(
-                        binding.root,
-                        com.example.aistudioapp.R.string.model_upload_failed,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-            }
+            promptSkeletonType(uris)
         }
 
     private var currentMode = DesignerMode.MAKEHUMAN
@@ -183,6 +164,52 @@ class MakeHumanFragment : Fragment() {
         webView.evaluateJavascript(requestScript, null)
     }
 
+    private fun promptSkeletonType(uris: List<Uri>) {
+        var selectedIndex = 0
+        val options = arrayOf(
+            getString(com.example.aistudioapp.R.string.skeleton_human),
+            getString(com.example.aistudioapp.R.string.skeleton_second_life)
+        )
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(com.example.aistudioapp.R.string.skeleton_picker_title)
+            .setSingleChoiceItems(options, selectedIndex) { _, which ->
+                selectedIndex = which
+            }
+            .setPositiveButton(com.example.aistudioapp.R.string.action_import_models) { _, _ ->
+                val type = if (selectedIndex == 1) SkeletonType.SECOND_LIFE else SkeletonType.HUMAN
+                importModels(uris, type)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun importModels(uris: List<Uri>, skeletonType: SkeletonType) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val count = modelRepository.addModels(
+                requireContext().contentResolver,
+                uris,
+                skeletonType
+            )
+            if (count > 0 && isAdded) {
+                Snackbar.make(
+                    binding.root,
+                    resources.getQuantityString(
+                        com.example.aistudioapp.R.plurals.models_uploaded_toast,
+                        count,
+                        count
+                    ),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            } else if (isAdded) {
+                Snackbar.make(
+                    binding.root,
+                    com.example.aistudioapp.R.string.model_upload_failed,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
     private fun updateModelSection(entries: List<LocalModelEntry>) {
         modelAdapter.submitList(entries)
         val hasItems = entries.isNotEmpty()
@@ -201,6 +228,12 @@ class MakeHumanFragment : Fragment() {
             "window.loadExternalModel('${entry.webPath}');",
             null
         )
+        if (entry.skeletonType == SkeletonType.SECOND_LIFE) {
+            binding.characterStudioWebView.evaluateJavascript(
+                "window.applySkeletonPreset && window.applySkeletonPreset('SECOND_LIFE');",
+                null
+            )
+        }
     }
 
     private fun configureMakeHumanWebView() {
